@@ -12,6 +12,6 @@ define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
 // URL base do sistema (ajuste conforme seu ambiente)
-// Exemplo XAMPP: http://localhost/teste-php/
+// Exemplo XAMPP: http://localhost/teste-php/teste-php/
 // Exemplo com PHP built-in server: http://localhost:8080/
-define('BASE_URL', 'http://localhost/teste-php/');
+define('BASE_URL', 'http://localhost/teste-php/teste-php/');
