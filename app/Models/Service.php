@@ -172,4 +172,57 @@ class Service extends Model
 
         return $this->execute($sql, ['id' => $id]);
     }
+
+    /**
+     * Calcula a comissão conforme o valor do serviço.
+     *
+     * - até R$ 1.000,00       → 5%
+     * - acima de R$ 1.000,00  → 10%
+     * - acima de R$ 10.000,00 → 20%
+     *
+     * @param float $price
+     * @return float
+     */
+    public function calculateCommission($price)
+    {
+        $price = (float) $price;
+
+        if ($price > 10000) {
+            return round($price * 0.20, 3);
+        }
+
+        if ($price > 1000) {
+            return round($price * 0.10, 3);
+        }
+
+        return round($price * 0.05, 3);
+    }
+
+    /**
+     * Finaliza um serviço pendente: grava data e comissão.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function finish($id)
+    {
+        $service = $this->findById($id);
+
+        if (!$service || $service['finished_at'] !== null) {
+            return false;
+        }
+
+        $commission = $this->calculateCommission($service['price']);
+
+        $sql = 'UPDATE `service`
+                SET finished_at = NOW(),
+                    commission_user = :commission
+                WHERE id_service = :id
+                  AND finished_at IS NULL';
+
+        return $this->execute($sql, [
+            'commission' => $commission,
+            'id'         => $id,
+        ]);
+    }
 }

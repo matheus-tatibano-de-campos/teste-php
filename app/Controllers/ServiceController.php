@@ -6,22 +6,27 @@
  * - create / store  → novo serviço (status Pendente)
  * - edit / update   → alterar descrição e preço
  * - delete          → remover serviço
- * - finish          → será implementado na Camada 6
+ * - finish          → data de finalização + comissão + e-mail
  */
 
 namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Service;
+use App\Models\User;
 
 class ServiceController extends Controller
 {
     /** @var Service */
     private $serviceModel;
 
+    /** @var User */
+    private $userModel;
+
     public function __construct()
     {
         $this->serviceModel = new Service();
+        $this->userModel    = new User();
     }
 
     /**
@@ -165,13 +170,98 @@ class ServiceController extends Controller
     }
 
     /**
-     * Placeholder — finalização será feita na Camada 6.
+     * Finaliza um serviço pendente: grava data, calcula comissão
+     * e tenta enviar e-mail para o usuário dono do serviço.
+     *
+     * Aceita GET (link) ou POST AJAX (jQuery).
      */
     public function finish(): void
     {
         $this->requireAuth();
-        $this->setFlash('error', 'Finalizar serviço será implementado na próxima camada.');
+
+        $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
+        $isAjax = $this->isAjaxRequest();
+
+        $service = $this->serviceModel->findById($id);
+
+        if (!$service) {
+            $this->respondFinish(false, 'Serviço não encontrado.', $isAjax);
+        }
+
+        if ($service['finished_at'] !== null) {
+            $this->respondFinish(false, 'Este serviço já está finalizado.', $isAjax);
+        }
+
+        if (!$this->serviceModel->finish($id)) {
+            $this->respondFinish(false, 'Falha ao finalizar o serviço. Tente novamente.', $isAjax);
+        }
+
+        $updated    = $this->serviceModel->findById($id);
+        $commission = (float) $updated['commission_user'];
+        $this->notifyOwnerByEmail($service, $commission);
+
+        $message = 'Serviço finalizado. Comissão: R$ ' . number_format($commission, 2, ',', '.');
+        $this->respondFinish(true, $message, $isAjax);
+    }
+
+    /**
+     * Responde à finalização: JSON (AJAX) ou flash + redirect (navegação normal).
+     *
+     * @param bool   $success
+     * @param string $message
+     * @param bool   $isAjax
+     */
+    private function respondFinish($success, $message, $isAjax)
+    {
+        if ($isAjax) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'success' => $success,
+                'message' => $message,
+            ]);
+            exit;
+        }
+
+        $this->setFlash($success ? 'success' : 'error', $message);
         $this->redirect('dashboard');
+    }
+
+    /**
+     * Detecta se a requisição veio via AJAX (jQuery).
+     *
+     * @return bool
+     */
+    private function isAjaxRequest()
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+
+    /**
+     * Envia e-mail ao dono do serviço.
+     * No XAMPP o mail() costuma falhar — o serviço já foi gravado mesmo assim.
+     *
+     * @param array $service
+     * @param float $commission
+     */
+    private function notifyOwnerByEmail(array $service, $commission)
+    {
+        $owner = $this->userModel->findById($service['user_id_user']);
+
+        if (!$owner || empty($owner['email'])) {
+            return;
+        }
+
+        $priceFormatted      = number_format((float) $service['price'], 2, ',', '.');
+        $commissionFormatted = number_format($commission, 2, ',', '.');
+
+        $subject = 'Serviço finalizado — ' . $service['description'];
+        $body    = "Olá, {$owner['name']}\n\n"
+            . "O serviço \"{$service['description']}\" foi finalizado.\n"
+            . "Valor: R$ {$priceFormatted}\n"
+            . "Comissão: R$ {$commissionFormatted}\n";
+
+        @mail($owner['email'], $subject, $body);
     }
 
     /**

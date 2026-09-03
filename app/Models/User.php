@@ -42,6 +42,22 @@ class User extends Model
     }
 
     /**
+     * Busca um usuário pelo ID.
+     *
+     * @param int $id
+     * @return array|false
+     */
+    public function findById($id)
+    {
+        $sql = 'SELECT id_user, name, email, ativo
+                FROM `user`
+                WHERE id_user = :id
+                LIMIT 1';
+
+        return $this->fetchOne($sql, ['id' => $id]);
+    }
+
+    /**
      * Cadastra um novo usuário com senha criptografada.
      *
      * @param string $name

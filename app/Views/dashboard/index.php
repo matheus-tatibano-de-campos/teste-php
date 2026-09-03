@@ -115,8 +115,9 @@
 
                                     <?php if ($service['finished_at'] === null): ?>
                                         <a
-                                            class="btn btn-small"
+                                            class="btn btn-small btn-finish"
                                             href="<?= BASE_URL ?>?route=service/finish&amp;id=<?= (int) $service['id_service'] ?>"
+                                            data-id="<?= (int) $service['id_service'] ?>"
                                         >Finalizar</a>
                                     <?php endif; ?>
                                 </td>
@@ -128,5 +129,10 @@
         </div>
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        var BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
+    <script src="<?= BASE_URL ?>public/js/app.js"></script>
 </body>
 </html>
