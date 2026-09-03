@@ -42,7 +42,7 @@ abstract class Model
      * @param array  $params
      * @return array|false
      */
-    protected function fetchOne(string $sql, array $params = []): array|false
+    protected function fetchOne(string $sql, array $params = [])
     {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
