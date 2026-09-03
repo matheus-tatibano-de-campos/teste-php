@@ -20,16 +20,112 @@
     <main class="main-content">
         <h1>DASHBOARD</h1>
 
+        <p class="dashboard-meta">
+            Data atual: <strong><?= htmlspecialchars($currentDate) ?></strong>
+        </p>
+
         <?php if (!empty($flash)): ?>
             <p class="alert alert-<?= htmlspecialchars($flash['type']) ?>">
                 <?= htmlspecialchars($flash['message']) ?>
             </p>
         <?php endif; ?>
 
-        <p class="dashboard-placeholder">
-            Bem-vindo, <strong><?= htmlspecialchars($user['name']) ?></strong>.
-            A listagem de serviços será implementada na próxima camada.
-        </p>
+        <!-- Valor total destacado -->
+        <div class="total-box">
+            <span class="total-label">Valor total dos seus serviços:</span>
+            <span class="total-value">
+                R$ <?= number_format($totalValue, 2, ',', '.') ?>
+            </span>
+        </div>
+
+        <!-- Listas: Últimos serviços | Serviços pendentes -->
+        <div class="lists-row">
+            <div class="list-block">
+                <h2>Ultimos Serviços</h2>
+                <?php if (empty($lastServices)): ?>
+                    <p class="empty-msg">Nenhum serviço cadastrado.</p>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($lastServices as $item): ?>
+                            <li>
+                                <?= (int) $item['id_service'] ?>
+                                - <?= htmlspecialchars($item['description']) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+
+            <div class="list-block">
+                <h2>Serviços Pendentes</h2>
+                <?php if (empty($pendingServices)): ?>
+                    <p class="empty-msg">Nenhum serviço pendente.</p>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($pendingServices as $item): ?>
+                            <li>
+                                <?= (int) $item['id_service'] ?>
+                                - <?= htmlspecialchars($item['description']) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Tabela de serviços -->
+        <h2 class="table-title">Serviços Prestados</h2>
+
+        <div class="table-wrap">
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>DESCRIÇÃO</th>
+                        <th>VALOR</th>
+                        <th>STATUS</th>
+                        <th>USUÁRIO</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($services)): ?>
+                        <tr>
+                            <td colspan="6" class="empty-msg">Nenhum serviço encontrado.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($services as $service): ?>
+                            <tr>
+                                <td><?= (int) $service['id_service'] ?></td>
+                                <td><?= htmlspecialchars($service['description']) ?></td>
+                                <td>R$ <?= number_format((float) $service['price'], 2, ',', '.') ?></td>
+                                <td><?= htmlspecialchars(strtoupper($service['status'])) ?></td>
+                                <td><?= htmlspecialchars($service['user_name']) ?></td>
+                                <td class="actions">
+                                    <a
+                                        class="btn btn-small"
+                                        href="<?= BASE_URL ?>?route=service/edit&amp;id=<?= (int) $service['id_service'] ?>"
+                                    >Alterar</a>
+
+                                    <a
+                                        class="btn btn-small"
+                                        href="<?= BASE_URL ?>?route=service/delete&amp;id=<?= (int) $service['id_service'] ?>"
+                                        onclick="return confirm('Deseja excluir este serviço?');"
+                                    >Excluir</a>
+
+                                    <?php if ($service['finished_at'] === null): ?>
+                                        <a
+                                            class="btn btn-small"
+                                            href="<?= BASE_URL ?>?route=service/finish&amp;id=<?= (int) $service['id_service'] ?>"
+                                        >Finalizar</a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </main>
 
 </body>

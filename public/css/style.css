@@ -87,6 +87,18 @@ body {
     background: #333;
 }
 
+.btn-small {
+    padding: 4px 10px;
+    margin-right: 4px;
+    background: #444;
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+.btn-small:hover {
+    background: #222;
+}
+
 /* --- Alertas --- */
 
 .alert {
@@ -106,7 +118,7 @@ body {
     color: #000;
 }
 
-/* --- Dashboard (placeholder Camada 3) --- */
+/* --- Dashboard --- */
 
 .dashboard-page {
     display: flex;
@@ -118,6 +130,7 @@ body {
     background: #333;
     color: #fff;
     padding: 24px 16px;
+    flex-shrink: 0;
 }
 
 .sidebar-user {
@@ -148,10 +161,96 @@ body {
 
 .main-content h1 {
     font-size: 1.75rem;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
 }
 
-.dashboard-placeholder {
-    font-size: 1rem;
-    line-height: 1.6;
+.dashboard-meta {
+    margin-bottom: 20px;
+    color: #444;
+}
+
+/* Valor total destacado */
+.total-box {
+    border: 2px solid #000;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: inline-block;
+    background: #f7f7f7;
+}
+
+.total-label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.total-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+/* Listas lado a lado */
+.lists-row {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 32px;
+}
+
+.list-block {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-block h2 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.list-block ul {
+    list-style: none;
+}
+
+.list-block li {
+    padding: 4px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.95rem;
+}
+
+.empty-msg {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* Tabela */
+.table-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.table-wrap {
+    border: 1px solid #000;
+    overflow-x: auto;
+}
+
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.services-table th,
+.services-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+.services-table th {
+    background: #f0f0f0;
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+}
+
+.services-table .actions {
+    white-space: nowrap;
 }
