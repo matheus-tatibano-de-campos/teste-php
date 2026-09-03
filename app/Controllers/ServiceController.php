@@ -57,7 +57,10 @@ class ServiceController extends Controller
             $this->redirect('service/create');
         }
 
-        $this->validateCsrf();
+        if (!$this->csrfIsValid()) {
+            $this->setFlash('error', 'Falha ao cadastrar o serviço.');
+            $this->redirect('dashboard');
+        }
 
         $description = trim($_POST['description'] ?? '');
         $priceRaw    = trim($_POST['price'] ?? '');
@@ -65,17 +68,23 @@ class ServiceController extends Controller
         $error = $this->validateServiceInput($description, $priceRaw);
 
         if ($error !== null) {
-            $this->setFlash('error', $error);
+            $this->setFlash('error', 'Falha ao cadastrar o serviço.');
             $this->redirect('dashboard');
         }
 
         $price  = $this->parsePrice($priceRaw);
         $userId = (int) $_SESSION['user']['id_user'];
 
-        if ($this->serviceModel->create($description, $price, $userId)) {
+        try {
+            $created = $this->serviceModel->create($description, $price, $userId);
+        } catch (\Exception $e) {
+            $created = false;
+        }
+
+        if ($created) {
             $this->setFlash('success', 'Serviço cadastrado com sucesso!');
         } else {
-            $this->setFlash('error', 'Falha ao cadastrar o serviço. Tente novamente.');
+            $this->setFlash('error', 'Falha ao cadastrar o serviço.');
         }
 
         $this->redirect('dashboard');
@@ -261,7 +270,10 @@ class ServiceController extends Controller
             . "Valor: R$ {$priceFormatted}\n"
             . "Comissão: R$ {$commissionFormatted}\n";
 
-        @mail($owner['email'], $subject, $body);
+        $headers = "From: Sistema JM <sistema@localhost>\r\n"
+            . "Content-Type: text/plain; charset=UTF-8\r\n";
+
+        @mail($owner['email'], '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers);
     }
 
     /**
@@ -278,7 +290,13 @@ class ServiceController extends Controller
             return 'Falha ao cadastrar: informe a descrição e o valor do serviço.';
         }
 
-        if (mb_strlen($description) > 45) {
+        if (function_exists('mb_strlen')) {
+            $length = mb_strlen($description);
+        } else {
+            $length = strlen($description);
+        }
+
+        if ($length > 45) {
             return 'Falha ao cadastrar: a descrição deve ter no máximo 45 caracteres.';
         }
 

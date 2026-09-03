@@ -13,7 +13,7 @@
         <p class="sidebar-name"><?= htmlspecialchars($user['name']) ?></p>
         <nav class="sidebar-nav">
             <a href="<?= BASE_URL ?>?route=service/create">Cadastrar Serviço</a>
-            <a href="<?= BASE_URL ?>?route=auth/logout">Sair</a>
+            <a class="nav-logout" href="<?= BASE_URL ?>?route=auth/logout">Sair</a>
         </nav>
     </aside>
 
@@ -103,9 +103,6 @@
             <button type="submit" class="btn btn-primary">Filtrar</button>
             <a class="auth-link" href="<?= BASE_URL ?>?route=dashboard">Limpar</a>
         </form>
-
-        <!-- Tabela de serviços -->
-        <h2 class="table-title">Serviços Prestados</h2>
 
         <div class="table-wrap">
             <table class="services-table">

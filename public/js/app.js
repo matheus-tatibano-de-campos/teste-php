@@ -1,6 +1,6 @@
 /**
  * Scripts do dashboard — jQuery
- * Camada 6: finalizar serviço via AJAX (sem recarregar a página).
+ * Finalizar serviço via AJAX e evitar clique duplo.
  */
 $(function () {
     $('.services-table').on('click', '.btn-finish', function (event) {
@@ -9,7 +9,7 @@ $(function () {
         var $button = $(this);
         var id = $button.data('id');
 
-        if (!id) {
+        if (!id || $button.hasClass('is-loading')) {
             return;
         }
 
@@ -17,7 +17,7 @@ $(function () {
             return;
         }
 
-        $button.prop('disabled', true).text('...');
+        $button.addClass('is-loading').text('...');
 
         $.ajax({
             url: BASE_URL + '?route=service/finish&id=' + encodeURIComponent(id),
@@ -30,10 +30,10 @@ $(function () {
             }
 
             window.alert(response.message || 'Não foi possível finalizar o serviço.');
-            $button.prop('disabled', false).text('Finalizar');
+            $button.removeClass('is-loading').text('Finalizar');
         }).fail(function () {
             window.alert('Erro de comunicação. Tente novamente.');
-            $button.prop('disabled', false).text('Finalizar');
+            $button.removeClass('is-loading').text('Finalizar');
         });
     });
 });

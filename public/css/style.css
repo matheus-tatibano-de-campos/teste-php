@@ -1,6 +1,6 @@
 /* =============================================================
-   Estilos base — Sistema de Controle de Serviços
-   Layout minimalista conforme wireframe (preto/branco)
+   Sistema de Controle de Serviços
+   Visual alinhado ao wireframe: preto, branco e cinza
    ============================================================= */
 
 * {
@@ -15,54 +15,65 @@ body {
     background: #fff;
 }
 
-/* --- Páginas de autenticação (login / cadastro) --- */
+input,
+select,
+button {
+    font-family: inherit;
+}
+
+/* --- Login / cadastro / formulários de serviço --- */
 
 .auth-page {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #fff;
 }
 
 .auth-box {
     width: 100%;
-    max-width: 420px;
-    padding: 20px;
+    max-width: 460px;
+    padding: 24px;
 }
 
 .auth-title {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: bold;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    text-align: left;
 }
 
 .auth-form input[type="email"],
 .auth-form input[type="password"],
 .auth-form input[type="text"] {
+    display: block;
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 12px;
+    height: 42px;
+    padding: 8px 12px;
+    margin-bottom: 14px;
     border: 1px solid #000;
+    background: #fff;
     font-size: 1rem;
 }
 
 .auth-form input::placeholder {
-    color: #999;
+    color: #b0b0b0;
 }
 
 .auth-actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .auth-footer {
-    margin-top: 16px;
+    margin-top: 18px;
 }
 
 .auth-link {
-    color: #0066cc;
+    color: #1565c0;
     text-decoration: underline;
     font-size: 0.95rem;
 }
@@ -71,32 +82,36 @@ body {
 
 .btn {
     display: inline-block;
-    padding: 8px 24px;
+    padding: 8px 22px;
     border: none;
     cursor: pointer;
     font-size: 1rem;
     text-decoration: none;
+    color: #fff;
 }
 
 .btn-primary {
     background: #000;
-    color: #fff;
 }
 
 .btn-primary:hover {
-    background: #333;
+    background: #222;
 }
 
 .btn-small {
-    padding: 4px 10px;
+    padding: 5px 10px;
     margin-right: 4px;
-    background: #444;
-    color: #fff;
-    font-size: 0.8rem;
+    background: #4a4a4a;
+    font-size: 0.78rem;
 }
 
 .btn-small:hover {
     background: #222;
+}
+
+.btn-small.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 /* --- Alertas --- */
@@ -110,12 +125,10 @@ body {
 
 .alert-error {
     background: #fff;
-    color: #000;
 }
 
 .alert-success {
-    background: #f0f0f0;
-    color: #000;
+    background: #f2f2f2;
 }
 
 /* --- Dashboard --- */
@@ -123,77 +136,85 @@ body {
 .dashboard-page {
     display: flex;
     min-height: 100vh;
+    background: #fff;
 }
 
 .sidebar {
-    width: 220px;
-    background: #333;
+    width: 210px;
+    background: #5a5a5a;
     color: #fff;
-    padding: 24px 16px;
+    padding: 28px 18px;
     flex-shrink: 0;
 }
 
 .sidebar-user {
-    font-size: 0.85rem;
-    color: #ccc;
+    font-size: 0.9rem;
 }
 
 .sidebar-name {
     font-weight: bold;
-    margin: 4px 0 24px;
+    margin: 2px 0 28px;
+    font-size: 1rem;
 }
 
 .sidebar-nav a {
     display: block;
     color: #fff;
     text-decoration: none;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
 }
 
 .sidebar-nav a:hover {
     text-decoration: underline;
 }
 
+.sidebar-nav a.nav-logout {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: #ddd;
+}
+
 .main-content {
     flex: 1;
-    padding: 32px;
+    padding: 28px 36px 40px;
 }
 
 .main-content h1 {
-    font-size: 1.75rem;
-    margin-bottom: 8px;
+    font-size: 1.85rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
 }
 
 .dashboard-meta {
-    margin-bottom: 20px;
-    color: #444;
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 0.95rem;
 }
 
-/* Valor total destacado */
 .total-box {
-    border: 2px solid #000;
-    padding: 14px 18px;
-    margin-bottom: 24px;
+    border: 1px solid #000;
+    padding: 12px 16px;
+    margin-bottom: 28px;
     display: inline-block;
-    background: #f7f7f7;
 }
 
 .total-label {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 4px;
 }
 
 .total-value {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: bold;
 }
 
-/* Listas lado a lado */
 .lists-row {
     display: flex;
-    gap: 40px;
-    margin-bottom: 32px;
+    gap: 64px;
+    margin-bottom: 28px;
 }
 
 .list-block {
@@ -202,8 +223,9 @@ body {
 }
 
 .list-block h2 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .list-block ul {
@@ -211,41 +233,44 @@ body {
 }
 
 .list-block li {
-    padding: 4px 0;
-    border-bottom: 1px solid #ddd;
+    padding: 3px 0;
     font-size: 0.95rem;
 }
 
 .empty-msg {
-    color: #777;
+    color: #888;
     font-size: 0.9rem;
 }
 
-/* Filtros */
 .filter-form {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 10px;
+    margin-bottom: 18px;
 }
 
 .filter-form input[type="text"],
 .filter-form input[type="date"],
 .filter-form select {
-    padding: 8px 10px;
+    height: 34px;
+    padding: 4px 10px;
     border: 1px solid #000;
-    font-size: 0.95rem;
+    background: #fff;
+    font-size: 0.9rem;
 }
 
 .filter-form input[name="description"] {
-    min-width: 160px;
+    width: 140px;
 }
 
-/* Tabela */
-.table-title {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+.filter-form .btn-primary {
+    background: #4a4a4a;
+    padding: 7px 18px;
+}
+
+.filter-form .btn-primary:hover {
+    background: #222;
 }
 
 .table-wrap {
@@ -260,18 +285,36 @@ body {
 
 .services-table th,
 .services-table td {
-    padding: 10px 12px;
+    padding: 10px 14px;
     text-align: left;
-    border-bottom: 1px solid #ccc;
     font-size: 0.9rem;
+    border-bottom: 1px solid #000;
+}
+
+.services-table tr:last-child td {
+    border-bottom: none;
 }
 
 .services-table th {
-    background: #f0f0f0;
     font-weight: bold;
-    border-bottom: 1px solid #000;
+    background: #fff;
 }
 
 .services-table .actions {
     white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+    .dashboard-page {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .lists-row {
+        flex-direction: column;
+        gap: 20px;
+    }
 }

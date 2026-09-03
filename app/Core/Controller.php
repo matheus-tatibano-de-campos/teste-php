@@ -108,14 +108,27 @@ abstract class Controller
      */
     protected function validateCsrf(): void
     {
-        $token = $_POST['csrf_token'] ?? '';
-
-        if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        if (!$this->csrfIsValid()) {
             http_response_code(403);
             die('Requisição inválida. Tente novamente.');
         }
+    }
 
-        // Invalida o token após uso (one-time use)
+    /**
+     * Verifica o token CSRF sem encerrar a página.
+     * Usado no cadastro de serviço para redirecionar com mensagem de falha.
+     *
+     * @return bool
+     */
+    protected function csrfIsValid()
+    {
+        $token = $_POST['csrf_token'] ?? '';
+
+        if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+            return false;
+        }
+
         unset($_SESSION['csrf_token']);
+        return true;
     }
 }

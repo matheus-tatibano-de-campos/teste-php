@@ -15,7 +15,7 @@
             <p class="alert alert-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="<?= BASE_URL ?>?route=service/store" class="auth-form">
+        <form method="POST" action="<?= BASE_URL ?>index.php?route=service/store" class="auth-form" novalidate>
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
             <input
@@ -24,7 +24,6 @@
                 placeholder="descrição"
                 maxlength="45"
                 value="<?= htmlspecialchars($description) ?>"
-                required
             >
 
             <input
@@ -32,7 +31,6 @@
                 name="price"
                 placeholder="preço"
                 value="<?= htmlspecialchars($price) ?>"
-                required
             >
 
             <button type="submit" class="btn btn-primary">Cadastrar</button>
