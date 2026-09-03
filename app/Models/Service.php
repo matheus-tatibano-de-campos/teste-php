@@ -94,4 +94,82 @@ class Service extends Model
 
         return $this->fetchAll($sql, ['user_id' => $userId]);
     }
+
+    /**
+     * Busca um serviço pelo ID.
+     *
+     * @param int $id
+     * @return array|false
+     */
+    public function findById($id)
+    {
+        $sql = 'SELECT
+                    id_service,
+                    description,
+                    price,
+                    finished_at,
+                    commission_user,
+                    created_at,
+                    user_id_user
+                FROM `service`
+                WHERE id_service = :id
+                LIMIT 1';
+
+        return $this->fetchOne($sql, ['id' => $id]);
+    }
+
+    /**
+     * Cadastra um novo serviço (sempre inicia como Pendente).
+     *
+     * @param string $description
+     * @param float  $price
+     * @param int    $userId
+     * @return bool
+     */
+    public function create($description, $price, $userId)
+    {
+        $sql = 'INSERT INTO `service` (description, price, user_id_user, finished_at)
+                VALUES (:description, :price, :user_id, NULL)';
+
+        return $this->execute($sql, [
+            'description' => $description,
+            'price'       => $price,
+            'user_id'     => $userId,
+        ]);
+    }
+
+    /**
+     * Atualiza descrição e preço de um serviço.
+     *
+     * @param int    $id
+     * @param string $description
+     * @param float  $price
+     * @return bool
+     */
+    public function update($id, $description, $price)
+    {
+        $sql = 'UPDATE `service`
+                SET description = :description,
+                    price = :price
+                WHERE id_service = :id';
+
+        return $this->execute($sql, [
+            'description' => $description,
+            'price'       => $price,
+            'id'          => $id,
+        ]);
+    }
+
+    /**
+     * Exclui um serviço pelo ID.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM `service` WHERE id_service = :id';
+
+        return $this->execute($sql, ['id' => $id]);
+    }
 }
