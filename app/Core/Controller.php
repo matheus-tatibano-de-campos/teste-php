@@ -37,13 +37,16 @@ abstract class Controller
     }
 
     /**
-     * Redireciona o navegador para outra URL do sistema.
+     * Redireciona o navegador para outra rota do sistema.
      *
-     * @param string $path Caminho após BASE_URL (ex: 'dashboard', 'auth/login')
+     * Usa o parâmetro ?route= porque o Apache (XAMPP) não tem rewrite
+     * automático. Exemplo: redirect('dashboard') → .../index.php?route=dashboard
+     *
+     * @param string $path Nome da rota (ex: 'dashboard', 'auth/login')
      */
     protected function redirect(string $path): void
     {
-        header('Location: ' . BASE_URL . $path);
+        header('Location: ' . BASE_URL . '?route=' . $path);
         exit;
     }
 
