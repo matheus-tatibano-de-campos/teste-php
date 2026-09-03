@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `service` (
 
 -- -------------------------------------------------------------
 -- Usuário de teste para primeiro acesso
--- Senha: 123456
+-- Senha: password
 -- -------------------------------------------------------------
 INSERT INTO `user` (`name`, `email`, `password`, `ativo`) VALUES
 ('José Silva', 'jose@jm.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1);
