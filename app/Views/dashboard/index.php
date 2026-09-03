@@ -73,6 +73,37 @@
             </div>
         </div>
 
+        <!-- Filtros da tabela (GET) -->
+        <form method="GET" action="<?= BASE_URL ?>" class="filter-form">
+            <input type="hidden" name="route" value="dashboard">
+
+            <input
+                type="text"
+                name="description"
+                placeholder="Nome"
+                value="<?= htmlspecialchars($filters['description']) ?>"
+            >
+
+            <input type="date" name="date_from" value="<?= htmlspecialchars($filters['date_from']) ?>">
+            <input type="date" name="date_to" value="<?= htmlspecialchars($filters['date_to']) ?>">
+
+            <select name="status">
+                <option value="">Status</option>
+                <option value="Pendente"<?= $filters['status'] === 'Pendente' ? ' selected' : '' ?>>Pendente</option>
+                <option value="Finalizado"<?= $filters['status'] === 'Finalizado' ? ' selected' : '' ?>>Finalizado</option>
+            </select>
+
+            <input
+                type="text"
+                name="user_name"
+                placeholder="Usuário"
+                value="<?= htmlspecialchars($filters['user_name']) ?>"
+            >
+
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a class="auth-link" href="<?= BASE_URL ?>?route=dashboard">Limpar</a>
+        </form>
+
         <!-- Tabela de serviços -->
         <h2 class="table-title">Serviços Prestados</h2>
 

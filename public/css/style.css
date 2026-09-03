@@ -221,6 +221,27 @@ body {
     font-size: 0.9rem;
 }
 
+/* Filtros */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filter-form input[type="text"],
+.filter-form input[type="date"],
+.filter-form select {
+    padding: 8px 10px;
+    border: 1px solid #000;
+    font-size: 0.95rem;
+}
+
+.filter-form input[name="description"] {
+    min-width: 160px;
+}
+
 /* Tabela */
 .table-title {
     font-size: 1.1rem;

@@ -14,12 +14,19 @@ use App\Core\Model;
 class Service extends Model
 {
     /**
-     * Lista todos os serviços com o nome do usuário responsável.
-     * Ordenado do mais recente para o mais antigo.
+     * Lista serviços com o nome do usuário, com filtros opcionais.
      *
+     * Filtros aceitos (todos opcionais e combináveis):
+     * - description : nome/descrição do serviço (LIKE)
+     * - date_from   : data inicial (YYYY-MM-DD) sobre created_at
+     * - date_to     : data final (YYYY-MM-DD) sobre created_at
+     * - status      : Pendente | Finalizado
+     * - user_name   : nome do usuário (LIKE)
+     *
+     * @param array $filters
      * @return array
      */
-    public function findAllWithUser()
+    public function findAllWithUser(array $filters = [])
     {
         $sql = 'SELECT
                     s.id_service,
@@ -35,10 +42,44 @@ class Service extends Model
                         ELSE \'Finalizado\'
                     END AS status
                 FROM `service` s
-                INNER JOIN `user` u ON u.id_user = s.user_id_user
-                ORDER BY s.created_at DESC';
+                INNER JOIN `user` u ON u.id_user = s.user_id_user';
 
-        return $this->fetchAll($sql);
+        $where  = [];
+        $params = [];
+
+        if (!empty($filters['description'])) {
+            $where[] = 's.description LIKE :description';
+            $params['description'] = '%' . $filters['description'] . '%';
+        }
+
+        if (!empty($filters['date_from'])) {
+            $where[] = 'DATE(s.created_at) >= :date_from';
+            $params['date_from'] = $filters['date_from'];
+        }
+
+        if (!empty($filters['date_to'])) {
+            $where[] = 'DATE(s.created_at) <= :date_to';
+            $params['date_to'] = $filters['date_to'];
+        }
+
+        if (!empty($filters['status']) && $filters['status'] === 'Pendente') {
+            $where[] = 's.finished_at IS NULL';
+        } elseif (!empty($filters['status']) && $filters['status'] === 'Finalizado') {
+            $where[] = 's.finished_at IS NOT NULL';
+        }
+
+        if (!empty($filters['user_name'])) {
+            $where[] = 'u.name LIKE :user_name';
+            $params['user_name'] = '%' . $filters['user_name'] . '%';
+        }
+
+        if ($where) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $sql .= ' ORDER BY s.created_at DESC';
+
+        return $this->fetchAll($sql, $params);
     }
 
     /**
